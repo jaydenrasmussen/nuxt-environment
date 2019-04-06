@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- '8.15'
+script:
+- yarn
+stages:
+- name: test
+- name: deploy
+  if: branch = master
+jobs:
+  include:
+  - stage: test
+    script: yarn test
+deploy:
+  provider: npm
+  email: jayden.rasmussen@gmail.com
+  on:
+    repo: jaydenrasmussen/nuxt-environment
+    branch: master
+  api_key:
+    secure: yKwcsDXoczuayD+bKiGU6W5VO0hhmZqzJYGzTBB4rMiGmAkbl+LAdzVRsJUUknZgVOmiv4TW1IoeHYVBobwzikdY3AnQL/owov67yJlQpSvb9Se36rvRfm7ZDkCvOWzNmC8byRd+ghnJ49j5PhKM/msx8EMVIi6m32Y19WDDko//79ikb/IvilzmbhmNJuq5PuPukybrng0rq61vwAtUw39um9Vr/2S0H9j8cClYUiIzbjXVzALMTojan+6Vh4A74d0uZV22/MitC1Q8QriB+BpriFo/q21IIqLd1pju4VEEQ5+YJkiBhdIUwgiGAv3FE1rragGdDcs4SlLU/w9+RaQ8E9sBHAKQWiyFyZPBmbnZMHJ6mcc+BFc5/K30PS4b/WCgS6guD/I1NWy0gtJfcWfGOpkBIR6Sk+n8mAApbH4LalZ28Pv9UwoKNTSAlP45uzrhGXR91c+tWmj+yvKOc5yKdEA50MLn+J8SRCeF3exIKNLBwhlfVbi0B5vOPeGcuX1VK0Sn7zlnDtJ3y1sMKNTepXp2IpBhBJ6Fi4ENbF1oH88IyMS215tBi3ih5hGAloUYlmhi+hoPrmfgZ/TsiQvbVphBXIG8kSAG8AKVtROkhb31H/Y8EeKziS7+3StaiS/4zMB5vAfWNq9/Y4t3HWNs9H13qjE1UlHPukmh/rs=

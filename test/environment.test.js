@@ -1,61 +1,92 @@
-jest.setTimeout(60000)
+const { resolve } = require('path')
 const { Nuxt, Builder } = require('nuxt-edge')
 const config = require('./fixture/nuxt.config')
 
-let nuxt, addTemplate
+let nuxt
 
 const url = path => `http://localhost:3000${path}`
 
-const setupNuxt = async (config) => {
-  nuxt = new Nuxt(config)
-
-  addTemplate = nuxt.moduleContainer.addTemplate = jest.fn(
-    nuxt.moduleContainer.addTemplate
-  )
-
-  const build = new Builder(nuxt)
-
-  await build.validatePages()
-  await build.generateRoutesAndFiles()
-  await nuxt.listen(3000)
-}
-const testSuite = () => {
-  test('init', async () => {
-    const window = await nuxt.renderAndGetWindow(url('/mounted'))
-    expect(window.$nuxt.$env).toBeDefined()
+describe('shape', () => {
+  const module = require('../lib/module')
+  test('Module is exported correctly', () => {
+    expect(module).toBeFunction()
   })
-}
+  test('When mounted, moves options correctly', () => {
+    const _addPlugin = jest.fn()
+    const _module = {
+      module,
+      addPlugin: _addPlugin,
+      options: { stages: {} }
+    }
+    _module.module()
+    expect(_addPlugin).toBeCalledWith({
+      'filename': 'environment.js',
+      'options': {
+        'stages': {}
+      },
+      'src': resolve(__dirname, '../lib', 'plugin.js')
+    })
+  })
+})
 describe('module', () => {
   beforeAll(async () => {
     nuxt = new Nuxt(config)
 
-    // Spy addTemplate
-    addTemplate = nuxt.moduleContainer.addTemplate = jest.fn(
-      nuxt.moduleContainer.addTemplate
-    )
+    await new Builder(nuxt).build()
+    await nuxt.listen(3000)
+  }, 60000)
+
+  afterAll(async () => {
+    await nuxt.close()
+  })
+  test('mounts inside the window', async () => {
+    const window = await nuxt.renderAndGetWindow(url('/mounted'))
+    window.onNuxtReady(() => {
+      const $env = window.$nuxt.$env
+      expect($env).toBeDefined()
+      expect($env).toContainKeys([
+        'os',
+        'system',
+        'platform',
+        'engine'
+      ])
+    })
+  })
+})
+describe('module with stages option', () => {
+  beforeAll(async () => {
+    nuxt = new Nuxt(Object.assign(config, {
+      stages: {
+        'dev': 'localhost'
+      }
+    }))
 
     await new Builder(nuxt).build()
     await nuxt.listen(3000)
-  })
+  }, 60000)
 
   afterAll(async () => {
     await nuxt.close()
   })
-
-  testSuite()
-})
-describe('empty config', () => {
-  beforeAll(async () => {
-    config.stages = {}
-
-    await setupNuxt(config)
+  test('mounts inside the window', async () => {
+    const window = await nuxt.renderAndGetWindow(url('/mounted'))
+    window.onNuxtReady(() => {
+      const $env = window.$nuxt.$env
+      expect($env).toBeDefined()
+      expect($env).toContainKeys([
+        'os',
+        'system',
+        'platform',
+        'engine',
+        '_stages'
+      ])
+    })
   })
-
-  afterAll(async () => {
-    await nuxt.close()
-  })
-
-  test('preset baseURL and browserBaseURL', () => {
-    expect(addTemplate).toBeDefined()
+  test('matches stage correctly', async () => {
+    const window = await nuxt.renderAndGetWindow(url('/mounted'))
+    window.onNuxtReady(() => {
+      const $env = window.$nuxt.$env
+      expect($env.stage).toBe('dev')
+    })
   })
 })
