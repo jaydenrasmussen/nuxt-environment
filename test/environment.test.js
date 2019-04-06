@@ -46,7 +46,7 @@ describe('module', () => {
       expect($env).toBeDefined()
       expect($env).toContainKeys([
         'os',
-        'system',
+        'browser',
         'platform',
         'engine'
       ])
@@ -75,7 +75,7 @@ describe('module with stages option', () => {
       expect($env).toBeDefined()
       expect($env).toContainKeys([
         'os',
-        'system',
+        'browser',
         'platform',
         'engine',
         '_stages'

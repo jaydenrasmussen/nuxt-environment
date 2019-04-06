@@ -1,7 +1,7 @@
 {
   "name": "nuxt-environment",
-  "version": "0.1.0",
-  "description": "Secure and easy axios integration with Nuxt.js",
+  "version": "0.2.1",
+  "description": "Easily get information about the browser and url you're running your nuxt project on",
   "license": "MIT",
   "contributors": [
     "Jayden Rasmussen <jayden.rasmussen@gmail.com>"
