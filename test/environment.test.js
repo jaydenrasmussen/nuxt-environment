@@ -48,7 +48,8 @@ describe('module', () => {
         'os',
         'browser',
         'platform',
-        'engine'
+        'engine',
+        'size'
       ])
     })
   })
@@ -78,6 +79,7 @@ describe('module with stages option', () => {
         'browser',
         'platform',
         'engine',
+        'size',
         '_stages'
       ])
     })
