@@ -1,6 +1,6 @@
 # Nuxt-Environment
 
-Easily get information about the browser and url you're running your Nuxt project in
+Easily inject your environment into a nuxt project, and get information about what environment your application is running on.
 
 ### Installation
 
@@ -15,7 +15,10 @@ modules: [
   'nuxt-environment' // option A
 ],
 stages: {
-  'dev': 'localhost'
+  'dev': {
+    url: 'dev.site.url'
+    apiUrl: 'https://httpstat.us'
+  }
 }
 ...
 ```
@@ -26,7 +29,10 @@ stages: {
 modules: [
   ['nuxt-environment', {
     stages: {
-      'dev': 'localhost'
+      'dev': {
+        url: 'dev.site.url'
+        apiUrl: 'https://httpstat.us'
+      }
     }
   }]
 ]
@@ -37,25 +43,27 @@ Now, `$env` is available everywhere, and can tell you a lot about where your pro
 
 ```javascript
 {
-  "browser": {
-    "name": "Chrome",
-    "version": "73.0.3683.86"
+  client: {
+    "browser": {
+      "name": "Chrome",
+      "version": "73.0.3683.86"
+    },
+    "os": {
+      "name": "macOS",
+      "version": "10.14.3"
+    },
+    "platform": {
+      "type": "desktop",
+      "vendor": "Apple"
+    },
+    "engine": {
+      "name": "Blink"
+    }
   },
-  "os": {
-    "name": "macOS",
-    "version": "10.14.3"
-  },
-  "platform": {
-    "type": "desktop",
-    "vendor": "Apple"
-  },
-  "engine": {
-    "name": "Blink"
-  },
-  "_stages": {
-    "dev": "localhost"
+  "stage": {
+    url: 'dev.site.url'
+    apiUrl: 'https://httpstat.us'
   }
-  "stage": "dev" // or your current stage is based on the stages you added to config
 }
 ```
 

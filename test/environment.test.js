@@ -20,11 +20,11 @@ describe('shape', () => {
     }
     _module.module()
     expect(_addPlugin).toBeCalledWith({
-      'filename': 'environment.js',
-      'options': {
-        'stages': {}
+      filename: 'environment.js',
+      options: {
+        stages: {}
       },
-      'src': resolve(__dirname, '../lib', 'plugin.js')
+      src: resolve(__dirname, '../lib', 'plugin.js')
     })
   })
 })
@@ -44,49 +44,12 @@ describe('module', () => {
     window.onNuxtReady(() => {
       const $env = window.$nuxt.$env
       expect($env).toBeDefined()
-      expect($env).toContainKeys([
+      expect($env.client).toContainKeys([
         'os',
         'browser',
         'platform',
         'engine'
       ])
-    })
-  })
-})
-describe('module with stages option', () => {
-  beforeAll(async () => {
-    nuxt = new Nuxt(Object.assign(config, {
-      stages: {
-        'dev': 'localhost'
-      }
-    }))
-
-    await new Builder(nuxt).build()
-    await nuxt.listen(3000)
-  }, 60000)
-
-  afterAll(async () => {
-    await nuxt.close()
-  })
-  test('mounts inside the window', async () => {
-    const window = await nuxt.renderAndGetWindow(url('/mounted'))
-    window.onNuxtReady(() => {
-      const $env = window.$nuxt.$env
-      expect($env).toBeDefined()
-      expect($env).toContainKeys([
-        'os',
-        'browser',
-        'platform',
-        'engine',
-        '_stages'
-      ])
-    })
-  })
-  test('matches stage correctly', async () => {
-    const window = await nuxt.renderAndGetWindow(url('/mounted'))
-    window.onNuxtReady(() => {
-      const $env = window.$nuxt.$env
-      expect($env.stage).toBe('dev')
     })
   })
 })
