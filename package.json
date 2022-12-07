@@ -39,7 +39,7 @@
     "husky": "latest",
     "jest": "latest",
     "jest-extended": "latest",
-    "lint-staged": "^8.1.5",
+    "lint-staged": "^13.1.0",
     "nuxt-edge": "latest"
   },
   "husky": {
